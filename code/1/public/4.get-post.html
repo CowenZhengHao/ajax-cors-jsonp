@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GET / POST 请求</title>
+</head>
+<body>
+    <h1>GET / POST 请求</h1>
+    <button class="get">GET请求</button>
+    <button class="post">POST请求</button>
+</body>
+</html>
+<script>
+    const get = document.querySelector(".get"),
+          post = document.querySelector(".post");
+    get.addEventListener("click",()=>{
+        const xhr = new XMLHttpRequest();
+        xhr.open("get","http://localhost:3000/get");
+        xhr.send();
+        xhr.onload=function(){
+            console.log(xhr.responseText);
+        }
+    })
+    post.addEventListener("click",()=>{
+        const xhr = new XMLHttpRequest();
+        xhr.open("post","http://localhost:3000/post");
+        // xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+        xhr.setRequestHeader("Content-Type","application/json");
+        // xhr.send("name=cowen&age=32");
+        xhr.send(JSON.stringify({name:"cowen",age:32}))
+        xhr.onload=function(){
+            console.log(xhr.responseText)
+        }
+    })
+</script>

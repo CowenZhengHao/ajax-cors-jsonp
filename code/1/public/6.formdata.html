@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>formData提交</title>
+</head>
+
+<body>
+    <h1>formData提交</h1>
+    <form id="form">
+        <table>
+            <tr>
+                <td>
+                    <input type="text" name="username" >
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="password" name="password">
+                </td>
+            </tr>
+        </table>
+        <input class="button" type="button" value="提交">
+    </form>
+</body>
+
+</html>
+<script>
+    const form = document.getElementById("form"),
+        button = document.querySelector(".button");
+    button.onclick = function () {
+        let formData = new FormData(form);
+        const xhr = new XMLHttpRequest();
+        xhr.open("post", "http://localhost:3000/formdata");
+        xhr.send(formData);
+        xhr.onload = function (e) {
+            console.log(xhr.responseText)
+        }
+    }
+</script>

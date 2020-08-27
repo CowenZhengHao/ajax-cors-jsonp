@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>formdta模拟提交</title>
+</head>
+
+<body>
+    <h1>formdta模拟提交</h1>
+    <button>提交</button>
+</body>
+
+</html>
+<script>
+    const button = document.querySelector("button");
+    button.addEventListener("click", () => {
+        let formdata = new FormData();
+        formdata.append("name", "cowen");
+        formdata.append("age", "32");
+        const xhr = new XMLHttpRequest();
+        xhr.open("post", "http://localhost:3000/formdata");
+        xhr.send(formdata);
+        xhr.onload = function () {
+            console.log(xhr.responseText)
+        }
+    })
+</script>
