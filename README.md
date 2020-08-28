@@ -14,7 +14,7 @@
   `ajax`全称异步的 `JavaScript` 和 `XML`，通过在后台与服务器进行少量数据交换，`AJAX` 可以使网页实现异步更新。这意味着可以在不重新加载整个网页的情况下，对网页的某部分进行更新。
 
   - `XMLHttpRequest`：`XMLHttpRequest` 是 `AJAX` 的基础，基本上所有现代浏览器都支持。
-  - `ActiveXObject`：老版本的IE使用`ActiveX`对象（不常用）。
+  - `ActiveXObject`：老版本的`IE`使用`ActiveX`对象（不常用）。
 
 - **请求发送：**
 
@@ -309,8 +309,57 @@
 #### 2、同源策略：
 
 - **同源的含义：**
+
+  如果两个页面拥有**相同的协议**、**域名和端口**，那么这两个页面就属于同源，其中只要有一个不相同，就是不同源。
+
+  同源策略是为了保证用户信息的安全，防止恶意的网站窃取数据，最初的同源策略是指不同网站下的cookie设置。
+
+  ```javascript
+  // 同源策略下的报错
+  Access to XMLHttpRequest at 'http://localhost:4000/origin/?t=002' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+  ```
+
+- **同源的限制范围：**
+
+  随着互联网的发展，"同源政策"越来越严格。目前，如果非同源，共有三种行为受到限制。
+
+  - `Cookie`、`LocalStorage` 和 `IndexDB` 无法读取。
+  - `DOM` 无法获得。
+  - `AJAX` 请求不能发送。
+
 - **`CORS`跨域资源共享：**
+
+  `CORS`全称为`Cross-origin resource sharing`，即跨域资源共享，它允许浏览器向跨域服务器发送Ajax请求，克服了Ajax只能同源使用的限制。
+
+  `CORS`的定义使用`Access-Control-Allow-Origin`设置，如果是`*`，代表允许所有的客户端来访问。
+
+  ```javascript
+  const path=require('path');
+  const express = require('express');
+  const app=express();
+  app.get("/origin",(req,res)=>{
+      res.header("Access-Control-Allow-Origin","*");
+      res.header("Access-Control-Allow-Methods","get,post");
+      res.send("Ok");
+  })
+  ```
+
 - **服务端同源转换：**
+
+  **服务器端的访问不存在同源和非同源之说**，因此可以利用同源下的服务器去访问非同源的数据，然后再转换成同源下的请求。
+
+  ```javascript
+  const express = require('express');
+  const request = require('request');
+  const app=express();
+  app.get("/convert",(req,res)=>{
+      request("http://woool.sdo.com/web2/Handler/20180611_Live/GetDaoyuList.ashx",(err,response,body)=>{
+          res.send(body);
+      });
+  })
+  ```
+
+- **非同源下的`Cookie`信息传递：**
 
 #### 3、跨域的使用：
 
