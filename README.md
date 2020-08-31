@@ -314,6 +314,8 @@
 
   同源策略是为了保证用户信息的安全，防止恶意的网站窃取数据，最初的同源策略是指不同网站下的cookie设置。
 
+  同源策略是浏览器给予`Ajax`技术的限制，服务器端是不存在同源政策的限制的。
+
   ```javascript
   // 同源策略下的报错
   Access to XMLHttpRequest at 'http://localhost:4000/origin/?t=002' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
@@ -360,6 +362,25 @@
   ```
 
 - **非同源下的`Cookie`信息传递：**
+
+  在使用`Ajax`技术发送跨域请求时，**默认情况下不会在请求中携带cookie信息**。这样就无法实现登录等信息验证请求了。
+
+  - `xhr`开启`withCredentials`为`true`。
+  - 后端代码要开启`Access-Control-Allow-Credentials`为`true`。
+  - 允许请求的源要指定一个，不能为所有的源都允许了。
+
+  ```javascript
+  // xhr请求
+  xhr.withCredentials=true;
+  // express后端
+  app.use((req,res,next)=>{
+      res.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+      res.setHeader("Access-Control-Allow-Credentials",true);
+      next();
+  });
+  ```
+
+- **代理的使用：**
 
 #### 3、跨域的使用：
 
