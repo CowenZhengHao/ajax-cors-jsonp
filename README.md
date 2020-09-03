@@ -59,7 +59,9 @@
 
 - **`ajax`状态码和`onreadystatechange`：**
 
-  当请求被发送到服务器时，需要执行一些基于响应的任务，`readyState`属性是记录`ajax`请求的状态码。而`onreadystatechange`事件则是记录状态码改变时的事件。
+  当请求被发送到服务器时，需要执行一些基于响应的任务，`readyState`属性是记录`ajax`请求的状态码。
+
+  `onreadystatechange`事件则是记录状态码改变时的事件。
 
   - 0  请求未初始化 
 
@@ -382,11 +384,65 @@
 
 - **代理的使用：**
 
-#### 3、跨域的使用：
+  代理的使用其实就是在本地开启一个服务，用开启的服务去请求对应的路径，其本质就是利用了服务器的同源转换（服务器间的请求是不存在跨域的）。常见的代理工具可以是`fiddler`和`charles`。当然也可以使用`webpack`中的代理服务器。
+  
+  ```javascript
+  devServer:{
+       hot:true,
+       open:true,
+       port:3000,
+       contentBase:path.resolve(__dirname,"dist"),
+       proxy:{
+            "/":"http://localhost:3002"
+       }
+   }
+  ```
+
+#### 3、跨域：
+
+- **`JSONP`原理：**
+
+  `jsonp`跨域其实是利用了`script`标签中的`src`属性具有跨域请求的原理，使用预先设定好的全局函数，在`script`标签加载完毕之后立即调用该函数，返回服务器端响应的数据。
+
+  `jsonp`请求要求客户端和服务端要提前约定好回调函数的名称，该函数名称要在发送请求之前提前定义好。
+
+  ```javascript
+  // 客户端请求
+  function callback(data){
+      console.log(data)
+  }
+  const script=document.createElement("script");
+  script.src="http://localhost:3000/jsonp1";
+  document.body.append(script);
+  script.onload=()=>{
+      document.body.removeChild(script);
+  }
+  // 服务端
+  const express = require('express');
+  const app = express();
+  app.get("/jsonp1",(req,res)=>{
+      const data={name:"cowen",age:32};
+      const callback=`callback(${JSON.stringify(data)})`;
+      res.send(callback)
+  });
+  app.listen("3000",()=>{
+      console.log("服务已经开启");
+  })
+  ```
+
+- **`JSONP`优化：**
+
+  
 
 #### 4、`RESETful`接口：
 
-#### 5、$.ajax、axios和fetch的区别：
+#### 5、$.ajax的使用：
+
+#### 6、`axios`的使用：
+
+#### 7、`fetch`的使用：
+
+
 
 
 

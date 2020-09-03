@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon ./server.js"
+    "server": "nodemon ./server.js",
+    "proxy" : "nodemon ./proxy.js"
   },
   "author": "",
   "license": "ISC",

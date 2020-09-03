@@ -12,7 +12,10 @@ const Config={
         hot:true,
         open:true,
         port:3000,
-        contentBase:path.resolve(__dirname,"dist")
+        contentBase:path.resolve(__dirname,"dist"),
+        proxy:{
+            "/":"http://localhost:3002"
+        }
     },
     plugins:[
         new htmlWebpackPlugin({
