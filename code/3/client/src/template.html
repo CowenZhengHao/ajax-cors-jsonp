@@ -9,3 +9,35 @@
     
 </body>
 </html>
+<!-- jsonp初始化 -->
+<script>
+    // function callback(data){
+    //     console.log("打印结果")
+    //     console.log(data);
+    // }
+    // const script=document.createElement("script");
+    // script.src="http://localhost:3000/jsonp1";
+    // document.body.append(script);
+    // script.onload=()=>{
+    //     document.body.removeChild(script);
+    // }
+</script>
+<!-- jsonp优化 -->
+<script>
+    const Ajax = (option)=>{
+        var script = document.createElement("script");
+        var fnName = `jsonp` + new Date().getTime();
+        window[fnName] = option.success;
+        script.src=option.url + "?callback=" + fnName;
+        document.body.appendChild(script);
+        script.onload = ()=>{
+            document.body.removeChild(script);
+        }
+    };
+    Ajax({
+        url:"http://localhost:3000/jsonp2",
+        success:function(res){
+            console.log(res);
+        }
+    });
+</script>

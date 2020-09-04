@@ -400,11 +400,17 @@
 
 #### 3、跨域：
 
+- **何为跨域：**
+
+  跨域即为**非同源请求**，如果两个页面拥有**相同的协议**、**域名和端口**，那么这两个页面就属于同源，其中只要有一个不相同，就是跨域。
+
 - **`JSONP`原理：**
 
   `jsonp`跨域其实是利用了`script`标签中的`src`属性具有跨域请求的原理，使用预先设定好的全局函数，在`script`标签加载完毕之后立即调用该函数，返回服务器端响应的数据。
 
   `jsonp`请求要求客户端和服务端要提前约定好回调函数的名称，该函数名称要在发送请求之前提前定义好。
+
+  `demo`文件夹中的`client`代码会打包js文件为严格模式，这种模式下无法将`callback`定义成全局。
 
   ```javascript
   // 客户端请求
@@ -431,6 +437,47 @@
   ```
 
 - **`JSONP`优化：**
+
+  在`JSONP`请求函数中，每次请求的全局函数要预先定义，对于不同的请求处理，全局函数还不能重复。因此可以在全局对象`window`上定义函数，并且函数名是随机生成的。
+
+  ```javascript
+  // 客户端
+  const Ajax = (option)=>{
+      var script = document.createElement("script");
+      var fnName = `jsonp` + new Date().getTime();
+      // 将函数预先定义在window上 全局函数
+      window[fnName] = option.success;
+      script.src=option.url + "?callback=" + fnName;
+      document.body.appendChild(script);
+      script.onload = ()=>{
+          document.body.removeChild(script);
+      }
+  }
+  Ajax({
+      url:"http://localhost:3000/jsonp2",
+      success:function(res){
+          console.log(res);
+      }
+  });
+  // 服务端
+  const express = require('express');
+  const app = express();
+  app.get("/jsonp2", (req, res) => {
+      const data = { name: "cowen", age: 32, time: new Date().getTime() };
+      // 获取传过来的函数名称
+      const fnName = req.query.callback;
+      res.send(`${fnName}(${JSON.stringify(data)})`);
+  })
+  // 当然也可以直接使用
+  app.get("/jsonp2", (req, res) => {
+      const data = { name: "cowen", age: 32, time: new Date().getTime() };
+      // jsonp方法直接转换
+      res.jsonp(data);
+  })
+  app.listen("3000", () => {
+      console.log("服务已经开启");
+  })
+  ```
 
   
 
