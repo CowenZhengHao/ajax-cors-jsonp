@@ -479,9 +479,94 @@
   })
   ```
 
+  > **`JSONP`只能发送`Get`请求：** `jsonp`是基于资源的请求，而资源的请求其实只有`Get`方式获取，因此`jsonp`只能发送`get`请求。
   
+- **代理：**
+
+  由于服务器端的请求不存在跨域请求，代理的作用就是利用服务端请求转发。
+
+  代理可以使用`webpack-dev=server`定义代理，也可以利用`Fiddler`或者`chalars`等工具进行服务转发。
 
 #### 4、`RESETful`接口：
+
+- **`RESTful`规范：**
+
+  `RESTful`其实就是一种规范，它代表着分布式服务的架构风格。
+
+  深刻理解`RESTful`可以从三个方面进行理解：
+
+  - 每一个`URL`代表一种资源；
+  - 客户端和服务器之间，传递这种资源的某种表现层；
+  - 客户端通过四个`HTTP`动词（`GET / POST / PUT / DELETE`），对服务器资源进行操作。
+
+- **请求方式：**
+
+  `RESTful`对应api地址是一样的，只是请求方式不同的时候，对应的操作也是不一样的。
+
+  - `GET`：获取数据
+  - `POST`：添加数据
+  - `PUT`：更新数据
+  - `DELETE`：删除数据
+
+  ```javascript
+  // RESTful API的实现
+  GET:    http://www.example.com/users    // 获取用户列表数据
+  POST:   http://www.example.com/users    // 创建（添加）用户数据
+  PUT:    http://www.example.com/users/1  // 修改用户ID为1的用户信息
+  DELETE: http://www.example.com/users/1  // 删除用户ID为1的用户信息
+  ```
+
+- **`RESTful`接口实现：**
+
+  使用`express`模拟`RESTful`接口实现，对于相同的`url`，通过定义不同的请求方法来实现不同的操作。
+
+  ```javascript
+  const express = require('express');
+  const app = express();
+  // 获取用户列表
+  app.get("/users", (req, res) => {
+      let list = [{ name: "cowen", age: 32 }];
+      res.json(list);
+  });
+  
+  // 添加新用户
+  app.post("/users", (req, res) => {
+      let result = {
+          time: new Date().getTime(),
+          info: {
+              name: "cowen",
+              age: 32
+          }
+      };
+      res.json(result);
+  });
+  
+  // 获取指定id的用户信息
+  app.get("/user/:id", (req, res) => {
+      let result = {};
+      result.id = req.params.id;
+      result.info = { name: "cowen", age: 32 };
+      res.json(result);
+  });
+  
+  // 更新指定id的用户信息
+  app.put("/user/:id", (req, res) => {
+      let result = { status: "Ok", info: { name: "cowen", age: 32 } };
+      res.json(result);
+  });
+  
+  // 删除指定id的用户信息
+  app.delete('/user/:id', (req, res) => {
+      let result={msg:`${req.params.id}的信息已经被删除`};
+      res.json(result);
+  });
+  
+  app.listen("3000", () => {
+      console.log("服务已经开启");
+  })
+  ```
+
+  
 
 #### 5、$.ajax的使用：
 
