@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>$.ajax()请求</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    $.ajax({
+        type:"get",
+        url:"http://localhost:4000/1",
+        dataType:"html",
+        success:function(res){
+            console.log(res);
+        },
+        error:function(err){
+            console.log(err)
+        }
+    })
+</script>
